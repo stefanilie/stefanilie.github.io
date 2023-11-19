@@ -1,1 +1,84 @@
-<!DOCTYPE html><html><head><meta charset=utf-8><title>stefanilie.com</title><meta name=viewport content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no"><meta name=description content="Andrei stefanilie's personal page."><link rel=stylesheet href=/css/main.css></head><body><div class=container><div class=image><img src=assets/img/Tei.jpg class=img-responsive><div class=message><h1>Greetings earthlings!</h1><div class=small>This will soon be updated!</div></div></div></div><script src=/js/main.js></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scroll Animation with Responsive iPhone Image</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 300%; /* Adjust this depending on your content */
+    background-color: #f3f3f3;
+  }
+  .section {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  #iphone-section {
+    min-height: 150vh; /* Give more space for the iPhone to slide in */
+  }
+  .logo {
+    background-image: url('assets/img/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 10%; /* Responsive width */
+    height: 10vh; /* Responsive height, maintaining aspect ratio */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 1s;
+    z-index: 10;
+  }
+  .iphone-shape {
+    width: 60vw; /* Responsive width based on viewport width */
+    max-width: 300px; /* Maximum size */
+    position: fixed;
+    bottom: -100%; /* Start off-screen */
+    left: 50%;
+    transform: translateX(-50%);
+    transition: bottom 1s ease-out, transform 1s ease-out;
+    z-index: 5;
+  }
+</style>
+</head>
+<body>
+
+<div class="section" id="start-section">
+  <!-- Just a spacer section -->
+</div>
+
+<div class="section" id="iphone-section">
+  <img class="iphone-shape" src="https://upload.wikimedia.org/wikipedia/commons/9/9f/IPhone_14_Pro_vector.svg" alt="iPhone Shape"/>
+</div>
+
+<div class="logo" id="logo"></div>
+
+<script>
+  // Handle the scroll event
+  window.addEventListener('scroll', () => {
+    const logo = document.getElementById('logo');
+    const iphoneShape = document.querySelector('.iphone-shape');
+    const sectionHeight = window.innerHeight;
+    const scrollPosition = window.scrollY;
+
+    // Calculate when to start the iPhone slide-in animation
+    const iphoneStart = document.getElementById('iphone-section').offsetTop - sectionHeight;
+
+    // Slide in the iPhone shape
+    if (scrollPosition > iphoneStart) {
+      iphoneShape.style.bottom = '0%'; // Slide in
+      logo.style.transform = 'translate(-50%, -50%) scale(0.1)'; // Scale down logo
+    } else {
+      iphoneShape.style.bottom = '-100%'; // Slide out
+      logo.style.transform = 'translate(-50%, -50%) scale(1)'; // Scale up logo
+    }
+  });
+</script>
+
+</body>
+</html>
