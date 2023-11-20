@@ -21,18 +21,36 @@
   #iphone-section {
     min-height: 150vh; /* Give more space for the iPhone to slide in */
   }
-  .logo {
-    background-image: url('assets/img/logo.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    width: 10%; /* Responsive width */
-    height: 10vh; /* Responsive height, maintaining aspect ratio */
+  .logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     transition: transform 1s;
     z-index: 10;
+  }
+  .logo {
+    background-image: url('assets/img/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 10vw; /* Responsive width */
+    height: 10vh; /* Responsive height, maintaining aspect ratio */
+  }
+  .buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
   }
   .iphone-shape {
     width: 60vw; /* Responsive width based on viewport width */
@@ -41,7 +59,7 @@
     bottom: -100%; /* Start off-screen */
     left: 50%;
     transform: translateX(-50%);
-    transition: bottom 1s ease-out, transform 1s ease-out;
+    transition: bottom 1s ease-out;
     z-index: 5;
   }
 </style>
@@ -56,45 +74,45 @@
   <img class="iphone-shape" src="https://upload.wikimedia.org/wikipedia/commons/9/9f/IPhone_14_Pro_vector.svg" alt="iPhone Shape"/>
 </div>
 
-<div class="logo" id="logo"></div>
+<div class="logo-container" id="logo-container">
+  <div class="logo" id="logo"></div>
+  <div class="buttons">
+    <button class="button">Button 1</button>
+    <button class="button">Button 2</button>
+    <button class="button">Button 3</button>
+    <button class="button">Button 4</button>
+  </div>
+</div>
 
 <script>
   // Function to map scroll range to a specific range
   function mapRange(value, a, b, c, d) {
-    // First map value from (a..b) to (0..1)
     value = (value - a) / (b - a);
-    // Then map it from (0..1) to (c..d) and clamp the result
     return Math.max(Math.min(c + value * (d - c), Math.max(c, d)), Math.min(c, d));
   }
 
   window.addEventListener('scroll', () => {
-    const logo = document.getElementById('logo');
+    const logoContainer = document.getElementById('logo-container');
     const iphoneShape = document.querySelector('.iphone-shape');
-    const startSection = document.getElementById('start-section');
-    const iphoneSection = document.getElementById('iphone-section');
-
-    const startSectionEnd = startSection.offsetTop + startSection.offsetHeight;
-    const iphoneSectionEnd = iphoneSection.offsetTop + iphoneSection.offsetHeight;
+    const startSectionEnd = document.getElementById('start-section').offsetTop + window.innerHeight;
+    const iphoneSectionEnd = document.getElementById('iphone-section').offsetTop + window.innerHeight;
 
     const scrollPosition = window.scrollY;
-
-    // Determine how far through the section we've scrolled
     let scrollRange = iphoneSectionEnd - startSectionEnd;
     let scrollProgress = scrollPosition - startSectionEnd;
-    
+
     // Prevent the animation from reversing once the section has been scrolled past
     scrollProgress = Math.max(scrollProgress, 0);
 
     // Calculate scale and bottom position based on scroll position
-    let scale = mapRange(scrollProgress, 0, scrollRange, 1, 0.1);
+    let scale = mapRange(scrollProgress, 0, scrollRange, 1, 0.5); // Target scale is now 50%
     let bottomPosition = mapRange(scrollProgress, 0, scrollRange, -100, 0);
 
     // Apply the calculated scale and bottom position
-    logo.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    logoContainer.style.transform = `translate(-50%, -50%) scale(${scale})`;
     iphoneShape.style.bottom = `${bottomPosition}%`;
   });
 </script>
-
 
 </body>
 </html>
