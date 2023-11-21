@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scroll Animation with Responsive iPhone Image</title>
+<title>Scroll Animation with Responsive Devices</title>
 <style>
   body, html {
     margin: 0;
     padding: 0;
-    height: 300%; /* Adjust this depending on your content */
+    height: 400%; /* Adjust this depending on your content */
     background-color: #f3f3f3;
   }
   .section {
@@ -17,9 +17,6 @@
     justify-content: center;
     align-items: center;
     position: relative;
-  }
-  #iphone-section {
-    min-height: 150vh; /* Give more space for the iPhone to slide in */
   }
   .logo-container {
     display: flex;
@@ -52,9 +49,7 @@
     border: none;
     cursor: pointer;
   }
-  .iphone-shape {
-    width: 60vw; /* Responsive width based on viewport width */
-    max-width: 300px; /* Maximum size */
+  .iphone-shape, .ipad-shape {
     position: fixed;
     bottom: -100%; /* Start off-screen */
     left: 50%;
@@ -62,12 +57,20 @@
     transition: bottom 1s ease-out;
     z-index: 5;
   }
+  .ipad-shape {
+    width: 80vw; /* Responsive width based on viewport width */
+    max-width: 400px; /* Maximum size */
+  }
 </style>
 </head>
 <body>
 
 <div class="section" id="start-section">
   <!-- Just a spacer section -->
+</div>
+
+<div class="section" id="ipad-mini-section">
+  <img class="ipad-mini-shape" src="assets/img/iPadMini.png" alt="iPad Mini Shape"/>
 </div>
 
 <div class="section" id="iphone-section">
@@ -83,7 +86,6 @@
     <button class="button">Button 4</button>
   </div>
 </div>
-
 <script>
   // Function to map scroll range to a specific range
   function mapRange(value, a, b, c, d) {
@@ -91,26 +93,46 @@
     return Math.max(Math.min(c + value * (d - c), Math.max(c, d)), Math.min(c, d));
   }
 
-  window.addEventListener('scroll', () => {
+  function getScrollProgress(section) {
+    const sectionStart = section.offsetTop;
+    const sectionEnd = sectionStart + section.offsetHeight;
+    const scrollPosition = window.scrollY + window.innerHeight;
+    let scrollRange = sectionEnd - sectionStart;
+    let scrollProgress = scrollPosition - sectionStart;
+    scrollProgress = Math.max(Math.min(scrollProgress, scrollRange), 0);
+    return {scrollProgress, scrollRange};
+  }
+
+window.addEventListener('scroll', () => {
     const logoContainer = document.getElementById('logo-container');
+    const ipadMiniShape = document.querySelector('.ipad-mini-shape');
     const iphoneShape = document.querySelector('.iphone-shape');
-    const startSectionEnd = document.getElementById('start-section').offsetTop + window.innerHeight;
-    const iphoneSectionEnd = document.getElementById('iphone-section').offsetTop + window.innerHeight;
 
-    const scrollPosition = window.scrollY;
-    let scrollRange = iphoneSectionEnd - startSectionEnd;
-    let scrollProgress = scrollPosition - startSectionEnd;
+    // Get scroll progress for both sections
+    const ipadMiniProgress = getScrollProgress(document.getElementById('ipad-mini-section'));
+    const iphoneProgress = getScrollProgress(document.getElementById('iphone-section'));
 
-    // Prevent the animation from reversing once the section has been scrolled past
-    scrollProgress = Math.max(scrollProgress, 0);
+    // Determine which scale to apply based on scroll progress
+    let scale;
+    if (ipadMiniProgress.scrollProgress <= ipadMiniProgress.scrollRange) {
+      // If we're in the iPad Mini section, scale between 100% and 75%
+      scale = mapRange(ipadMiniProgress.scrollProgress, 0, ipadMiniProgress.scrollRange, 1, 0.75);
+    } else if (iphoneProgress.scrollProgress <= iphoneProgress.scrollRange) {
+      // Once we reach the iPhone section, scale between 75% and 50%
+      scale = mapRange(iphoneProgress.scrollProgress, 0, iphoneProgress.scrollRange, 0.75, 0.5);
+    }
 
-    // Calculate scale and bottom position based on scroll position
-    let scale = mapRange(scrollProgress, 0, scrollRange, 1, 0.5); // Target scale is now 50%
-    let bottomPosition = mapRange(scrollProgress, 0, scrollRange, -100, 0);
-
-    // Apply the calculated scale and bottom position
+    // Apply the scale transformation
     logoContainer.style.transform = `translate(-50%, -50%) scale(${scale})`;
-    iphoneShape.style.bottom = `${bottomPosition}%`;
+
+    // Slide in iPad Mini shape
+    ipadMiniShape.style.bottom = `${mapRange(ipadMiniProgress.scrollProgress, 0, ipadMiniProgress.scrollRange, -100, 0)}%`;
+
+    // As the iPad Mini goes off the top of the screen, make it disappear
+    ipadMiniShape.style.top = `${mapRange(ipadMiniProgress.scrollProgress, 0, ipadMiniProgress.scrollRange, 0, -100)}%`;
+
+    // Slide in iPhone shape
+    iphoneShape.style.bottom = `${mapRange(iphoneProgress.scrollProgress, 0, iphoneProgress.scrollRange, -100, 0)}%`;
   });
 </script>
 
