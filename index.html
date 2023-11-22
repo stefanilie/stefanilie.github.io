@@ -1,140 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scroll Animation with Responsive Devices</title>
-<style>
-  body, html {
-    margin: 0;
-    padding: 0;
-    height: 400%; /* Adjust this depending on your content */
-    background-color: #f3f3f3;
-  }
-  .section {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
-  .logo-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: transform 1s;
-    z-index: 10;
-  }
-  .logo {
-    background-image: url('assets/img/logo.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    width: 10vw; /* Responsive width */
-    height: 10vh; /* Responsive height, maintaining aspect ratio */
-  }
-  .buttons {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  .button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    background: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  .iphone-shape, .ipad-shape {
-    position: fixed;
-    bottom: -100%; /* Start off-screen */
-    left: 50%;
-    transform: translateX(-50%);
-    transition: bottom 1s ease-out;
-    z-index: 5;
-  }
-  .ipad-shape {
-    width: 80vw; /* Responsive width based on viewport width */
-    max-width: 400px; /* Maximum size */
-  }
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scroll Animation with Responsive Devices</title>
+    <style>
+      @media screen and (max-width: 375px) {
+        body,
+        html {
+          background-color: #f3f3f3;
+        }
+        div {
+          border: 2px red solid;
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          margin: 1em;
+          align-items: center;
+        }
+        #first-section {
+          margin-top: 20%;
+        }
+        #logo {
+          width: 100%;
+          height: auto;
+        }
+        .buttons {
+          display: flex;
+          flex-direction: row;
+        }
+        .button {
+          display: flex;
+          margin: 1em;
+        }
+        .section {
+          margin: 30em 0.5em 30em 0.5em;
+        }
+        #ipad-mini-shape {
+          width: 117%;
+          height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- TODO: make one div with height of 400%, all subsequest divs to have flex 1 and space appart -->
+    <div id="first-section">
+      <div>
+        <img id="logo" src="assets/img/logo.png" />
+      </div>
+      <div class="buttons">
+        <button class="button">Button 1</button>
+        <button class="button">Button 2</button>
+        <button class="button">Button 3</button>
+        <button class="button">Button 4</button>
+      </div>
+    </div>
 
-<div class="section" id="start-section">
-  <!-- Just a spacer section -->
-</div>
+    <div class="section" id="iphone-section">
+      <img
+        class="iphone-shape"
+        src="https://upload.wikimedia.org/wikipedia/commons/9/9f/IPhone_14_Pro_vector.svg"
+        alt="iPhone Shape"
+      />
+    </div>
 
-<div class="section" id="ipad-mini-section">
-  <img class="ipad-mini-shape" src="assets/img/iPadMini.png" alt="iPad Mini Shape"/>
-</div>
+    <!-- TODO: Hide this for smaller screens -->
+    <div class="section" id="ipad-mini-section">
+      <img
+        id="ipad-mini-shape"
+        src="assets/img/iPadMini.png"
+        alt="iPad Mini Shape"
+      />
+    </div>
 
-<div class="section" id="iphone-section">
-  <img class="iphone-shape" src="https://upload.wikimedia.org/wikipedia/commons/9/9f/IPhone_14_Pro_vector.svg" alt="iPhone Shape"/>
-</div>
-
-<div class="logo-container" id="logo-container">
-  <div class="logo" id="logo"></div>
-  <div class="buttons">
-    <button class="button">Button 1</button>
-    <button class="button">Button 2</button>
-    <button class="button">Button 3</button>
-    <button class="button">Button 4</button>
-  </div>
-</div>
-<script>
-  // Function to map scroll range to a specific range
-  function mapRange(value, a, b, c, d) {
-    value = (value - a) / (b - a);
-    return Math.max(Math.min(c + value * (d - c), Math.max(c, d)), Math.min(c, d));
-  }
-
-  function getScrollProgress(section) {
-    const sectionStart = section.offsetTop;
-    const sectionEnd = sectionStart + section.offsetHeight;
-    const scrollPosition = window.scrollY + window.innerHeight;
-    let scrollRange = sectionEnd - sectionStart;
-    let scrollProgress = scrollPosition - sectionStart;
-    scrollProgress = Math.max(Math.min(scrollProgress, scrollRange), 0);
-    return {scrollProgress, scrollRange};
-  }
-
-window.addEventListener('scroll', () => {
-    const logoContainer = document.getElementById('logo-container');
-    const ipadMiniShape = document.querySelector('.ipad-mini-shape');
-    const iphoneShape = document.querySelector('.iphone-shape');
-
-    // Get scroll progress for both sections
-    const ipadMiniProgress = getScrollProgress(document.getElementById('ipad-mini-section'));
-    const iphoneProgress = getScrollProgress(document.getElementById('iphone-section'));
-
-    // Determine which scale to apply based on scroll progress
-    let scale;
-    if (ipadMiniProgress.scrollProgress <= ipadMiniProgress.scrollRange) {
-      // If we're in the iPad Mini section, scale between 100% and 75%
-      scale = mapRange(ipadMiniProgress.scrollProgress, 0, ipadMiniProgress.scrollRange, 1, 0.75);
-    } else if (iphoneProgress.scrollProgress <= iphoneProgress.scrollRange) {
-      // Once we reach the iPhone section, scale between 75% and 50%
-      scale = mapRange(iphoneProgress.scrollProgress, 0, iphoneProgress.scrollRange, 0.75, 0.5);
-    }
-
-    // Apply the scale transformation
-    logoContainer.style.transform = `translate(-50%, -50%) scale(${scale})`;
-
-    // Slide in iPad Mini shape
-    ipadMiniShape.style.bottom = `${mapRange(ipadMiniProgress.scrollProgress, 0, ipadMiniProgress.scrollRange, -100, 0)}%`;
-
-    // As the iPad Mini goes off the top of the screen, make it disappear
-    ipadMiniShape.style.top = `${mapRange(ipadMiniProgress.scrollProgress, 0, ipadMiniProgress.scrollRange, 0, -100)}%`;
-
-    // Slide in iPhone shape
-    iphoneShape.style.bottom = `${mapRange(iphoneProgress.scrollProgress, 0, iphoneProgress.scrollRange, -100, 0)}%`;
-  });
-</script>
-
-</body>
+    <script></script>
+  </body>
 </html>
