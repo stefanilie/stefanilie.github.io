@@ -3,41 +3,62 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Scroll Animation with Responsive Devices</title>
+    <title>Stefan Ilie - Homepage</title>
     <style>
-      @media screen and (max-width: 375px) {
-        body,
-        html {
-          background-color: #f3f3f3;
-        }
-        div {
-          border: 2px red solid;
-          display: flex;
-          flex: 1;
-          flex-direction: column;
-          margin: 1em;
-          align-items: center;
-        }
+      body,
+      html {
+        background-color: #f3f3f3;
+      }
+      div {
+        border: 2px red solid;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        margin: 1em;
+        align-items: center;
+      }
+      #first-section {
+        margin-top: 10%;
+      }
+      #logo {
+        width: 100%;
+        height: auto;
+      }
+      .buttons {
+        display: flex;
+        flex-direction: row;
+      }
+      .button {
+        display: flex;
+        margin: 0.5em;
+      }
+      .section {
+        margin: 30em 0.5em 30em 0.5em;
+      }
+      @media screen and (max-height: 600px) {
         #first-section {
-          margin-top: 20%;
+          margin-top: 35%;
         }
-        #logo {
+        #iphone-shape {
+          width: 90%;
+          height: auto;
+        }
+      }
+      @media screen and (max-height: 1000px) and (min-height: 600px) {
+        #first-section {
+          margin-top: 45%;
+        }
+        #iphone-shape {
           width: 100%;
           height: auto;
         }
-        .buttons {
-          display: flex;
-          flex-direction: row;
+      }
+      @media screen and (max-width: 1200px) and (min-width: 600px) {
+        #first-section {
+          margin-top: 10%;
         }
-        .button {
-          display: flex;
-          margin: 1em;
-        }
-        .section {
-          margin: 30em 0.5em 30em 0.5em;
-        }
-        #ipad-mini-shape {
-          width: 117%;
+        #iphone-shape {
+          width: 50%;
           height: auto;
         }
       }
@@ -45,35 +66,26 @@
   </head>
   <body>
     <!-- TODO: make one div with height of 400%, all subsequest divs to have flex 1 and space appart -->
-    <div id="first-section">
-      <div>
-        <img id="logo" src="assets/img/logo.png" />
+    <!-- <div id="container"> -->
+      <div id="first-section">
+        <div>
+          <img id="logo" src="assets/img/logo.png" />
+        </div>
+        <div class="buttons">
+          <button class="button">Button 1</button>
+          <button class="button">Button 2</button>
+          <button class="button">Button 3</button>
+        </div>
       </div>
-      <div class="buttons">
-        <button class="button">Button 1</button>
-        <button class="button">Button 2</button>
-        <button class="button">Button 3</button>
-        <button class="button">Button 4</button>
+
+      <div class="section" id="iphone-section">
+        <img
+          id="iphone-shape"
+          src="https://upload.wikimedia.org/wikipedia/commons/9/9f/IPhone_14_Pro_vector.svg"
+          alt="iPhone Shape"
+        />
       </div>
-    </div>
-
-    <div class="section" id="iphone-section">
-      <img
-        class="iphone-shape"
-        src="https://upload.wikimedia.org/wikipedia/commons/9/9f/IPhone_14_Pro_vector.svg"
-        alt="iPhone Shape"
-      />
-    </div>
-
-    <!-- TODO: Hide this for smaller screens -->
-    <div class="section" id="ipad-mini-section">
-      <img
-        id="ipad-mini-shape"
-        src="assets/img/iPadMini.png"
-        alt="iPad Mini Shape"
-      />
-    </div>
-
+    <!-- </div> -->
     <script></script>
   </body>
 </html>
